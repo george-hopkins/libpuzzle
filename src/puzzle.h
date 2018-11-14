@@ -71,6 +71,16 @@ int puzzle_fill_cvec_from_mem(PuzzleContext * const context,
 int puzzle_fill_cvec_from_dvec(PuzzleContext * const context,
                                PuzzleCvec * const cvec,
                                const PuzzleDvec * const dvec);
+int puzzle_fill_dvec_from_view(PuzzleContext * const context,
+                               PuzzleDvec * const dvec,
+                               const unsigned int width,
+                               const unsigned int height,
+                               const unsigned char * const view);
+int puzzle_fill_cvec_from_view(PuzzleContext * const context,
+                               PuzzleCvec * const cvec,
+                               const unsigned int width,
+                               const unsigned int height,
+                               const unsigned char * const view);
 void puzzle_free_cvec(PuzzleContext * const context,
                       PuzzleCvec * const cvec);
 void puzzle_free_dvec(PuzzleContext * const context,

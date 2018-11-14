@@ -288,6 +288,33 @@ static int puzzle_getview_from_gdimage(PuzzleContext * const context,
 }
 #endif
 
+static int puzzle_getview_from_raw(PuzzleContext * const context,
+                                       PuzzleView * const view,
+                                       const unsigned int width,
+                                       const unsigned int height,
+                                       const unsigned char * const map)
+{
+    view->map = NULL;
+    view->width = width;
+    view->height = height;
+    view->sizeof_map = (size_t) (view->width * view->height);
+    if (view->width > context->puzzle_max_width ||
+        view->height > context->puzzle_max_height) {
+        return -1;
+    }
+    if (view->sizeof_map <= (size_t) 0U ||
+        INT_MAX / view->width < view->height ||
+        SIZE_MAX / view->width < view->height ||
+        (unsigned int) view->sizeof_map != view->sizeof_map) {
+        puzzle_err_bug(__FILE__, __LINE__);
+    }
+    if ((view->map = malloc(view->sizeof_map)) == NULL) {
+        return -1;
+    }
+    memcpy(view->map, map, view->sizeof_map);
+    return 0;
+}
+
 static double puzzle_softedgedlvl(const PuzzleView * const view,
                                   const unsigned int x, const unsigned int y)
 {
@@ -650,6 +677,42 @@ int puzzle_fill_dvec_from_mem(PuzzleContext * const context,
     return ret;
 }
 #endif
+
+int puzzle_fill_dvec_from_view(PuzzleContext * const context,
+                                         PuzzleDvec * const dvec,
+                                         const unsigned int width,
+                                         const unsigned int height,
+                                         const unsigned char * const map)
+{
+    PuzzleView view;
+    PuzzleAvgLvls avglvls;
+    int ret = 0;
+
+    if (context->magic != PUZZLE_CONTEXT_MAGIC) {
+        puzzle_err_bug(__FILE__, __LINE__);
+    }
+    puzzle_init_view(&view);
+    puzzle_init_avglvls(&avglvls);
+    puzzle_init_dvec(context, dvec);
+    ret = puzzle_getview_from_raw(context, &view, width, height, map);
+    if (ret != 0) {
+        goto out;
+    }
+    if (context->puzzle_enable_autocrop != 0 &&
+        (ret = puzzle_autocrop_view(context, &view)) < 0) {
+        goto out;
+    }
+    if ((ret = puzzle_fill_avglgls(context, &avglvls,
+                                   &view, context->puzzle_lambdas)) != 0) {
+        goto out;
+    }
+    ret = puzzle_fill_dvec(dvec, &avglvls);
+    out:
+    puzzle_free_view(&view);
+    puzzle_free_avglvls(&avglvls);
+
+    return ret;
+}
 
 int puzzle_dump_dvec(PuzzleContext * const context,
                      const PuzzleDvec * const dvec)

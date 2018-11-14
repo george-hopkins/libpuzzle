@@ -202,3 +202,21 @@ int puzzle_fill_cvec_from_mem(PuzzleContext * const context,
     
     return ret;
 }
+
+int puzzle_fill_cvec_from_view(PuzzleContext * const context,
+                               PuzzleCvec * const cvec,
+                               const unsigned int width,
+                               const unsigned int height,
+                               const unsigned char * const view)
+{
+    PuzzleDvec dvec;
+    int ret;
+
+    puzzle_init_dvec(context, &dvec);
+    if ((ret = puzzle_fill_dvec_from_view(context, &dvec, width, height, view)) == 0) {
+        ret = puzzle_fill_cvec_from_dvec(context, cvec, &dvec);
+    }
+    puzzle_free_dvec(context, &dvec);
+
+    return ret;
+}
