@@ -16,15 +16,15 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PATH_PROG(GDLIBCONFIG, [gdlib-config])
+
+# Checks for libraries.
+AC_CHECK_LIB([gd], [gdImageCreateFromGd2], [
+AC_DEFINE([HAVE_LIBGD], [1], [Define to 1 if you have the GD library.])
 CPPFLAGS="$CPPFLAGS -D_GNU_SOURCE=1" 
 CPPFLAGS="$CPPFLAGS `$GDLIBCONFIG --cflags`"
 LDFLAGS="$LDFLAGS `$GDLIBCONFIG --ldflags`"
-LDADD="$LDADD `$GDLIBCONFIG --libs`"
-
-# Checks for libraries.
-
-AC_CHECK_LIB([gd], [gdImageCreateFromGd2],,
-             AC_ERROR([libgd2 development files not found]))
+LIBS="$LIBS `$GDLIBCONFIG --libs`"
+])
 
 # Checks for header files.
 AC_HEADER_STDC

@@ -168,6 +168,7 @@ int puzzle_cvec_cksum(PuzzleContext * const context,
     return 0;
 }
 
+#ifdef HAVE_LIBGD
 int puzzle_fill_cvec_from_file(PuzzleContext * const context,
                                PuzzleCvec * const cvec,
                                const char * const file)
@@ -183,6 +184,7 @@ int puzzle_fill_cvec_from_file(PuzzleContext * const context,
     
     return ret;
 }
+#endif
 
 int puzzle_fill_cvec_from_mem(PuzzleContext * const context,
                               PuzzleCvec * const cvec,

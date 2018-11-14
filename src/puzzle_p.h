@@ -2,7 +2,9 @@
 #define __PUZZLE_P_H__ 1
 
 #include <math.h>
+#ifdef HAVE_LIBGD
 #include <gd.h>
+#endif
 
 typedef struct PuzzleView_ {
     unsigned int width;
@@ -17,6 +19,7 @@ typedef struct PuzzleAvgLvls_ {
     double *lvls;
 } PuzzleAvgLvls;
 
+#ifdef HAVE_LIBGD
 typedef enum PuzzleImageTypeCode_ {
     PUZZLE_IMAGE_TYPE_ERROR, PUZZLE_IMAGE_TYPE_UNKNOWN, PUZZLE_IMAGE_TYPE_JPEG,
         PUZZLE_IMAGE_TYPE_GIF, PUZZLE_IMAGE_TYPE_PNG
@@ -27,6 +30,7 @@ typedef struct PuzzleImageType_ {
     const unsigned char *signature;
     const PuzzleImageTypeCode image_type_code;
 } PuzzleImageType;
+#endif
 
 #ifndef SIZE_MAX
 # define SIZE_MAX ((size_t) -1)

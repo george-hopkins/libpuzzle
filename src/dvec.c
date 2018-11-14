@@ -45,6 +45,7 @@ void puzzle_free_dvec(PuzzleContext * const context, PuzzleDvec * const dvec)
 
 #define MAX_SIGNATURE_LENGTH 8U
 
+#ifdef HAVE_LIBGD
 static PuzzleImageTypeCode puzzle_get_image_type_from_header(const unsigned char * const header)
 {
     static const PuzzleImageType image_types[] = {
@@ -92,6 +93,7 @@ static PuzzleImageTypeCode puzzle_get_image_type_from_fp(FILE * const fp)
     }    
     return ret;
 }
+#endif
 
 static int puzzle_autocrop_axis(PuzzleContext * const context,
                                 PuzzleView * const view,
@@ -221,6 +223,7 @@ static int puzzle_autocrop_view(PuzzleContext * context,
     return 0;
 }
 
+#ifdef HAVE_LIBGD
 static int puzzle_getview_from_gdimage(PuzzleContext * const context,
                                        PuzzleView * const view,
                                        gdImagePtr gdimage)
@@ -283,6 +286,7 @@ static int puzzle_getview_from_gdimage(PuzzleContext * const context,
     }
     return 0;
 }
+#endif
 
 static double puzzle_softedgedlvl(const PuzzleView * const view,
                                   const unsigned int x, const unsigned int y)
@@ -519,6 +523,7 @@ static int puzzle_fill_dvec(PuzzleDvec * const dvec,
     return 0;
 }
 
+#ifdef HAVE_LIBGD
 static void puzzle_remove_transparency(gdImagePtr gdimage)
 {
     int background = gdTrueColor(255, 255, 255);
@@ -644,6 +649,7 @@ int puzzle_fill_dvec_from_mem(PuzzleContext * const context,
     gdImageDestroy(gdimage);
     return ret;
 }
+#endif
 
 int puzzle_dump_dvec(PuzzleContext * const context,
                      const PuzzleDvec * const dvec)
